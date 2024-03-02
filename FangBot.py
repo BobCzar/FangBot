@@ -10,7 +10,7 @@ import random
 from datetime import timedelta
 from random import randrange
 from dotenv import load_dotenv
-
+import asyncio
 import discord
 from discord.ext import commands as dc
 
@@ -28,15 +28,16 @@ winghugId = int(os.getenv("WINGHUG_ID"))
 rulesChanId = int(os.getenv("RULES_CHANNEL_ID"))
 rulesPostId = int(os.getenv("RULES_POST_ID"))
 medsId = int(os.getenv("TAKEMEDS_ID"))
-intents = discord.Intents(
-    guilds=True,
-    members=True,
-    moderation=True,
-    emojis_and_stickers=True,
-    guild_messages=True,
-    guild_reactions=True,
-    message_content=True
-)
+# intents = discord.Intents(
+#     guilds=True,
+#     members=True,
+#     moderation=True,
+#     emojis_and_stickers=True,
+#     guild_messages=True,
+#     guild_reactions=True,
+#     message_content=True
+# )
+intents = discord.Intents.all()
 bot = dc.Bot(command_prefix="!", intents=intents, case_insensitive=True)
 logger = logging.getLogger('discord')
 
@@ -173,6 +174,20 @@ async def snoot(ctx):
             response = random.choice(lines)
             await ctx.send(response)
             await ctx.send("<:glorysnoot:870704286366040064>")
+
+@bot.command(name='verzena')
+async def verzena(ctx):
+    channel = ctx.author.voice.channel
+    if ctx.voice_client is None:
+        voice_channel = await channel.connect()
+    else:
+        voice_channel = await ctx.voice_client.move_to(channel)
+    audio_source = discord.FFmpegPCMAudio('verzena.mp3')
+    if not voice_channel.is_playing():
+        voice_channel.play(audio_source, after=lambda e: print('Player error: %s' % e) if e else None)
+    while voice_channel.is_playing():
+        await asyncio.sleep(1)
+    await voice_channel.disconnect()
 
 @bot.command(name="nuggie")
 async def nuggie(ctx):
