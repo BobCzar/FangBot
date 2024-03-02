@@ -177,6 +177,8 @@ async def snoot(ctx):
 
 @bot.command(name='verzena')
 async def verzena(ctx):
+    if ctx.author.name != 'bobczar':
+        return
     channel = ctx.author.voice.channel
     if ctx.voice_client is None:
         voice_channel = await channel.connect()
