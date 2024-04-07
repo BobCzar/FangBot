@@ -6,6 +6,7 @@ import os
 import logging
 import re
 import csv
+import json
 import random
 from datetime import timedelta
 from random import randrange
@@ -40,6 +41,8 @@ intents = discord.Intents(
 )
 bot = dc.Bot(command_prefix="!", intents=intents, case_insensitive=True)
 logger = logging.getLogger('discord')
+emoteData = {}
+stickerData = {}
 
 # Remove the built in help command so that we can define a custom help command.
 bot.remove_command("help")
@@ -62,6 +65,26 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_ready():
+    global emoteData
+    global stickerData
+
+    if not os.path.exists("emotes.json"):
+        logger.info("emotes.json not found, creating...")
+        with open("emotes.json",'w') as file:
+            file.write(json.dumps(emoteData))
+    else:
+        logger.info("Loading emote data.")
+        with open("emotes.json",'r') as file:
+            emoteData = json.load(file)
+    if not os.path.exists("stickers.json"):
+        logger.info("stickers.json not found, creating...")
+        with open("stickers.json",'w') as file:
+            file.write(json.dumps(stickerData))
+    else:
+        logger.info("Loading stickers data.")
+        with open("stickers.json",'r') as file:
+            stickerData = json.load(file)
+
     logger.info(f"{bot.user.name} is ready.")
 
 @bot.event
@@ -133,7 +156,34 @@ async def on_message(ctx):
         await ctx.channel.send(f"{maxEmoji} emoji per post, {author.mention}.")
         logger.info(f"{author.name} was warned for mass emoji.")
     else:
+        if msgEmoji:
+            count_emojis(msgEmoji, ctx.guild)
+        if ctx.stickers:
+            count_stickers(ctx.stickers, ctx.guild)
+
         await bot.process_commands(ctx)
+
+def count_emojis(emojisList,gld):
+    global emoteData
+    emojiIDs = [int(i.split(":")[-1][:-1]) for i in emojisList]
+    emojis = [discord.utils.get(gld.emojis, id=e) for e in emojiIDs] # Emojis from outside the server will be None
+    for e in emojis:
+        if e != None:
+            emoteData[str(e.id)] = emoteData.get(str(e.id), 0) + 1 # If entry doesn't exist innit to 0 and then add 1
+    # print(emoteData)
+    with open("emotes.json",'w') as file:
+        file.write(json.dumps(emoteData))
+
+def count_stickers(stickerList,gld):
+    global stickerData
+
+    sticker_IDs = [i.id for i in gld.stickers] # Discord has no easy way of checking if a sticker is part of a server
+    for s in stickerList:
+        if s.id in sticker_IDs:
+            stickerData[str(s.id)] = stickerData.get(str(s.id), 0) + 1
+
+    with open("stickers.json",'w') as file:
+        file.write(json.dumps(stickerData))
 
 @bot.event
 async def on_raw_reaction_add(payload):
