@@ -358,6 +358,7 @@ async def info(ctx):
 FangBot has been developed by
 - BobCzar
 - rc_05
+- Legalo
 
 Other developers will be added when needed.
 The source code is available [here](https://github.com/BobCzar/FangBot).
