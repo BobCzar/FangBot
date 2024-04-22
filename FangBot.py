@@ -167,7 +167,7 @@ async def on_raw_reaction_remove(payload):
                 await user.remove_roles(role)
                 logger.info(f"{role.name} was removed from {user.name}.")
 
-@bot.command(name="snoot")
+@bot.command(name="snoot", aliases=['boop'])
 async def snoot(ctx):
     with open('snoot.txt', mode='r') as f:
             lines = f.read().splitlines()
