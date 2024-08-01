@@ -250,7 +250,7 @@ async def tail(ctx):
             if winner:
                 logger.info(f"{ctx.author.name} won the tail roulette.")
 
-@bot.command(name="sneed")
+@bot.command(name="sneed", aliases=['faggot'])
 async def sneed(ctx):
     userName = ctx.author.nick or ctx.author.display_name
     member = ctx.author
@@ -258,11 +258,10 @@ async def sneed(ctx):
     isMascot = member.get_role(mascotRole)
     baseMsg = f"What you s*need* are your meds, {userName}." 
     if isMascot != None:
+        corndogs = ['Corndog','Corndoug','Courndoug','Cornpipe','Cornbread','Corncob','Cornholio','Cornpop','Cornflake']
         diceRoll = random.random()
-        if diceRoll < 0.00001:
-            await ctx.reply("Bad Corndoug, get away from the pill bottle!")
-        elif diceRoll < 0.0001:
-            await ctx.reply("Bad Corndog, get away from the pill bottle!")
+        if diceRoll < 0.1:
+            await ctx.reply(f"Bad {random.choice(corndogs)}, get away from the pill bottle!")
         else:
             await ctx.reply("Bad cat, get away from the pill bottle!")
     elif isJanny == None:
@@ -275,7 +274,6 @@ async def sneed(ctx):
         await ctx.send(f"{baseMsg} These pills should keep you medicated for {formattedChosenSecondsAmount}!", stickers=[s])
         await member.timeout(timeoutDelta)
         logger.info(f"{member} was timed out for {formattedChosenSecondsAmount} seconds")
-
     else:
         await ctx.send(f"{baseMsg} These pills won't help a janny. You're on your own, dweeb.")
 
