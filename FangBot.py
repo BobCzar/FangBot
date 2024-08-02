@@ -257,16 +257,16 @@ async def sneed(ctx):
     isJanny = member.get_role(modRole)
     isMascot = member.get_role(mascotRole)
     baseMsg = f"What you s*need* are your meds, {userName}." 
-    if isMascot != None:
-        corndogs = ['Corndog','Corndoug','Courndoug','Cornpipe','Cornbread','Corncob','Cornholio','Cornpop','Cornflake','Vennzoberanzan']
-        diceRoll = random.random()
-        if diceRoll < 0.00001:
-            await ctx.reply("Bad Corndoug, get away from the pill bottle!")
-        elif diceRoll < 0.0001:
-            await ctx.reply("Bad Corndog, get away from the pill bottle!")
-        else:
-            await ctx.reply("Bad cat, get away from the pill bottle!")
-    elif isJanny == None:
+    # if isMascot != None:
+    #     corndogs = ['Corndog','Corndoug','Courndoug','Cornpipe','Cornbread','Corncob','Cornholio','Cornpop','Cornflake','Vennzoberanzan']
+    #     diceRoll = random.random()
+    #     if diceRoll < 0.00001:
+    #         await ctx.reply("Bad Corndoug, get away from the pill bottle!")
+    #     elif diceRoll < 0.0001:
+    #         await ctx.reply("Bad Corndog, get away from the pill bottle!")
+    #     else:
+    #         await ctx.reply("Bad cat, get away from the pill bottle!")
+    if isJanny == None:
         s = await bot.get_guild(serverId).fetch_sticker(medsId)
         startingDelta = timedelta(days=1, minutes=1)
         totalSeconds = startingDelta.total_seconds()
