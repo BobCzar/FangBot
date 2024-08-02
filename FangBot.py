@@ -250,7 +250,7 @@ async def tail(ctx):
             if winner:
                 logger.info(f"{ctx.author.name} won the tail roulette.")
 
-@bot.command(name="sneed")
+@bot.command(name="sneed", aliases=['faggot'])
 async def sneed(ctx):
     userName = ctx.author.nick or ctx.author.display_name
     member = ctx.author
