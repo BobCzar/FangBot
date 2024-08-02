@@ -258,6 +258,7 @@ async def sneed(ctx):
     isMascot = member.get_role(mascotRole)
     baseMsg = f"What you s*need* are your meds, {userName}." 
     if isMascot != None:
+        corndogs = ['Corndog','Corndoug','Courndoug','Cornpipe','Cornbread','Corncob','Cornholio','Cornpop','Cornflake','Vennzoberanzan']
         diceRoll = random.random()
         if diceRoll < 0.00001:
             await ctx.reply("Bad Corndoug, get away from the pill bottle!")
