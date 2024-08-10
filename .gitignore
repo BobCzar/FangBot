@@ -1,6 +1,5 @@
 .env
-roles.csv
-nuggie.txt
-snoot.txt
-tail.txt
-rules.txt
+*.csv
+*.txt
+*.json
+!requirements.txt

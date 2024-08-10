@@ -258,25 +258,26 @@ async def sneed(ctx):
     isMascot = member.get_role(mascotRole)
     baseMsg = f"What you s*need* are your meds, {userName}." 
     if isMascot != None:
-        corndogs = ['Corndog','Corndoug','Courndoug','Cornpipe','Cornbread','Corncob','Cornholio','Cornpop','Cornflake','Vennzoberanzan']
-        diceRoll = random.random()
-        if diceRoll < 0.05:
-            if isJanny == None:
-                s = await bot.get_guild(serverId).fetch_sticker(medsId)
-                startingDelta = timedelta(days=1, minutes=1)
-                totalSeconds = startingDelta.total_seconds()
-                chosenSecondsAmount = randrange(1, totalSeconds)
-                timeoutDelta = timedelta(seconds=chosenSecondsAmount)
-                formattedChosenSecondsAmount = format(str(timedelta(seconds=chosenSecondsAmount)))
-                await ctx.send(f"What you s*need* are your meds, Fat Cat. These pills should keep you medicated for {formattedChosenSecondsAmount}!", stickers=[s])
-                await member.timeout(timeoutDelta)
-                logger.info(f"{member} was timed out for {formattedChosenSecondsAmount} seconds")
+        with open('mascot.txt','r') as f:
+            lines = f.read().splitlines
+            diceRoll = random.random()
+            if diceRoll < 0.05:
+                if isJanny == None:
+                    s = await bot.get_guild(serverId).fetch_sticker(medsId)
+                    startingDelta = timedelta(days=1, minutes=1)
+                    totalSeconds = startingDelta.total_seconds()
+                    chosenSecondsAmount = randrange(1, totalSeconds)
+                    timeoutDelta = timedelta(seconds=chosenSecondsAmount)
+                    formattedChosenSecondsAmount = format(str(timedelta(seconds=chosenSecondsAmount)))
+                    await ctx.send(f"What you s*need* are your meds, Fat Cat. These pills should keep you medicated for {formattedChosenSecondsAmount}!", stickers=[s])
+                    await member.timeout(timeoutDelta)
+                    logger.info(f"{member} was timed out for {formattedChosenSecondsAmount} seconds")
+                else:
+                    await ctx.send(f"{baseMsg} These pills won't help a janny. You're on your own, dweeb.")
+            elif diceRoll < 0.3:
+                await ctx.reply(f"Bad {random.choice(lines)}, get away from the pill bottle!")
             else:
-                await ctx.send(f"{baseMsg} These pills won't help a janny. You're on your own, dweeb.")
-        elif diceRoll < 0.3:
-            await ctx.reply(f"Bad {random.choice(corndogs)}, get away from the pill bottle!")
-        else:
-            await ctx.reply("Bad cat, get away from the pill bottle!")
+                await ctx.reply("Bad cat, get away from the pill bottle!")
     elif isJanny == None:
         s = await bot.get_guild(serverId).fetch_sticker(medsId)
         startingDelta = timedelta(days=1, minutes=1)
@@ -361,6 +362,62 @@ async def postrules(ctx):
         else:
             post = await rulesChan.fetch_message(welcomePost)
             await post.edit(embed=embed)
+
+@bot.command()
+async def print_emoji_counts(ctx):
+    isJanny = ctx.author.get_role(modRole)
+    if isJanny != None:
+        with open("emotes.json","r") as file:
+            counts = json.load(file)
+            names = await get_names(ctx.guild, counts.keys(), 'emoji')
+            sortedCounts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+            response = "Emoji counts:\n"
+            for id, count in sortedCounts:
+                name = names.get(id)
+                output = f"{id}-{name}: {count}\n"
+                if len(response) + len(output) > 2000:
+                    await ctx.send(response)
+                    response = output
+                else:
+                    response += output
+            await ctx.send(response)
+            
+@bot.command()
+async def print_sticker_counts(ctx):
+    isJanny = ctx.author.get_role(modRole)
+    if isJanny != None:
+        with open("stickers.json","r") as file:
+            counts = json.load(file)
+            names = await get_names(ctx.guild, counts.keys(), 'sticker')
+            sortedCounts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+            response = "Sticker counts:\n"
+            for id, count in sortedCounts:
+                name = names.get(id)
+                output = f"{id}-{name}: {count}\n"
+                if len(response) + len(output) > 2000:
+                    await ctx.send(response)
+                    response = output
+                else:
+                    response += output
+            await ctx.send(response)
+    
+async def get_names(gld, ids, type):
+    names = {}
+    if type == 'emoji':
+        for id in ids:
+            emoji = discord.utils.get(gld.emojis, id=int(id))
+            if emoji:
+                names[id] = emoji.name
+            else:
+                names[id] = 'DELETED EMOJI'
+    else:
+        for id in ids:
+            sticker = discord.utils.get(gld.stickers, id=int(id))
+            if sticker:
+                names[id] = sticker.name
+            else:
+                names[id] = 'DELETED STICKER'
+    return names
 
 
 @bot.command()
