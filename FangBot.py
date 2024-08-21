@@ -310,8 +310,12 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
             await ctx.reply("The timeout duration exceeds Discord's maximum limit of 28 days.")
             return
         for u in users:
-            await u.timeout(timeoutDur)
-            await ctx.reply(f"{u} was timed out for {timeoutDur}")
+            isUserMod = u.get_role(modRole)
+            if isUserMod is None:
+                await u.timeout(timeoutDur)
+                await ctx.reply(f"{u} was timed out for {timeoutDur}")
+            else:
+                await ctx.reply("Go have your janny fight somewhere else.")
     else:
         return
 
