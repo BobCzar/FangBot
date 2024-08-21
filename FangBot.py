@@ -291,6 +291,30 @@ async def sneed(ctx):
     else:
         await ctx.send(f"{baseMsg} These pills won't help a janny. You're on your own, dweeb.")
 
+@bot.command(name="timeout")
+async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
+    member = ctx.author
+    isMod = member.get_role(modRole)
+    if isMod is not None:
+        if timeframe == "days":
+            timeoutDur = timedelta(days=amount)
+        elif timeframe == "hours":
+            timeoutDur = timedelta(hours=amount)
+        elif timeframe == "minutes":
+            timeoutDur = timedelta(minutes=amount)
+        else:
+            await ctx.reply("Invalid timeframe, dweeb. Use 'days', 'hours', or 'minutes'.")
+            return
+        max_timeout = timedelta(days=28)
+        if timeoutDur > max_timeout:
+            await ctx.reply("The timeout duration exceeds Discord's maximum limit of 28 days.")
+            return
+        for u in users:
+            await u.timeout(timeoutDur)
+            await ctx.reply(f"{u} was timed out for {timeoutDur}")
+    else:
+        return
+
 @bot.command(name="winghug")
 async def winghug(ctx, *mentions:discord.Member):
     s = await bot.get_guild(serverId).fetch_sticker(winghugId)
