@@ -259,7 +259,7 @@ async def sneed(ctx):
     baseMsg = f"What you s*need* are your meds, {userName}." 
     if isMascot != None:
         with open('mascot.txt','r') as f:
-            lines = f.read().splitlines
+            lines = f.read().splitlines()
             diceRoll = random.random()
             if diceRoll < 0.05:
                 if isJanny == None:
