@@ -239,6 +239,14 @@ async def nuggie(ctx):
             await ctx.send(response)
             await ctx.send("<:fangnugdevour:936042789605613578>")
 
+@bot.command(name="oracle", aliases=['thrub'])
+async def oracle(ctx):
+    with open('oracle.txt', mode='r') as f:
+        lines = f.read().splitlines()
+        response = random.choice(lines)
+        await ctx.send("<:trishbigbrain:1267403453450158091>")
+        await ctx.send(response)
+
 @dc.cooldown(rate=1, per=60, type=dc.BucketType.user)
 @bot.command(name="tail")
 async def tail(ctx):
@@ -261,7 +269,7 @@ async def sneed(ctx):
     member = ctx.author
     isJanny = member.get_role(modRole)
     isMascot = member.get_role(mascotRole)
-    baseMsg = f"What you s*need* are your meds, {userName}." 
+    baseMsg = f"What you s*need* are your meds, {userName}."
     if isMascot != None:
         with open('mascot.txt','r') as f:
             lines = f.read().splitlines()
@@ -425,7 +433,7 @@ async def print_emoji_counts(ctx):
                 else:
                     response += output
             await ctx.send(response)
-            
+
 @bot.command()
 async def print_sticker_counts(ctx):
     isJanny = ctx.author.get_role(modRole)
@@ -444,7 +452,7 @@ async def print_sticker_counts(ctx):
                 else:
                     response += output
             await ctx.send(response)
-    
+
 async def get_names(gld, ids, type):
     names = {}
     if type == 'emoji':
@@ -486,6 +494,8 @@ List of commands:
     Boop that snoot!
 - nuggie
     Give Fang a nuggie
+- oracle
+    Gaze upon the wisdom of the creator of the Parasaurs™
 - tail
     Don't let Ripley catch you
 - sneed
