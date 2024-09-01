@@ -29,7 +29,6 @@ winghugId = int(os.getenv("WINGHUG_ID"))
 rulesChanId = int(os.getenv("RULES_CHANNEL_ID"))
 rulesPostId = int(os.getenv("RULES_POST_ID"))
 medsId = int(os.getenv("TAKEMEDS_ID"))
-eyerollId = int(os.getenv("EYEROLL_ID"))
 mascotRole = int(os.getenv("MASCOT_ROLE"))
 intents = discord.Intents(
     guilds=True,
@@ -86,7 +85,7 @@ async def on_ready():
         with open("stickers.json",'r') as file:
             stickerData = json.load(file)
 
-    logger.info(f"{bot.user.name} is ready in server.")
+    logger.info(f"{bot.user.name} is ready.")
 
 @bot.event
 async def on_member_join(member):
@@ -191,9 +190,8 @@ async def on_raw_reaction_add(payload):
     msg = payload.message_id
     uid = payload.user_id
     emoji = payload.emoji.name
-    emojiid = payload.emoji.id
-    server = bot.get_guild(serverId)
     if msg == welcomePost:
+        server = bot.get_guild(serverId)
         user = server.get_member(uid)
         with open('roles.csv', mode='r', encoding='utf-8') as f:
             reader = csv.reader(f)
@@ -202,9 +200,6 @@ async def on_raw_reaction_add(payload):
                 role = server.get_role(int(rolelist[emoji]))
                 await user.add_roles(role)
                 logger.info(f"{role.name} was added to {user.name}.")
-    else:
-        emojitext = [f"<:{emoji}:{emojiid}>"]
-        count_emojis(emojitext, server)
 
 @bot.event
 async def on_raw_reaction_remove(payload):
@@ -307,10 +302,8 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
             timeoutDur = timedelta(hours=amount)
         elif timeframe == "minutes":
             timeoutDur = timedelta(minutes=amount)
-        elif timeframe == "seconds":
-            timeoutDur = timedelta(seconds=amount)
         else:
-            await ctx.reply("Invalid timeframe, dweeb. Use 'days', 'hours', 'minutes', or 'seconds'.")
+            await ctx.reply("Invalid timeframe, dweeb. Use 'days', 'hours', or 'minutes'.")
             return
         max_timeout = timedelta(days=28)
         if timeoutDur > max_timeout:
@@ -318,22 +311,13 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
             return
         for u in users:
             isUserMod = u.get_role(modRole)
-            if u == ctx.author:
-                s = await bot.get_guild(serverId).fetch_sticker(eyerollId)
-                await u.reply("Don't do it dweeb. You have so much to live for.", stickers =[s])
-            elif isUserMod is None:
+            if isUserMod is None:
                 await u.timeout(timeoutDur)
                 await ctx.reply(f"{u} was timed out for {timeoutDur}")
             else:
                 await ctx.reply("Go have your janny fight somewhere else.")
     else:
         return
-
-@bot.command()
-async def temp1(ctx):
-    #s = await bot.get_guild(serverId).fetch_sticker(eyerollId)
-    await ctx.reply(f"Server ID is {serverId}")
-    await ctx.reply(f"Sticker ID is {eyerollId}")
 
 @bot.command(name="winghug")
 async def winghug(ctx, *mentions:discord.Member):
