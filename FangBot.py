@@ -31,6 +31,7 @@ rulesPostId = int(os.getenv("RULES_POST_ID"))
 medsId = int(os.getenv("TAKEMEDS_ID"))
 eyerollId = int(os.getenv("EYEROLL_ID"))
 mascotRole = int(os.getenv("MASCOT_ROLE"))
+thrubId = int(os.getenv("THRUB_ID"))
 intents = discord.Intents(
     guilds=True,
     members=True,
@@ -244,8 +245,8 @@ async def oracle(ctx):
     with open('oracle.txt', mode='r') as f:
         lines = f.read().splitlines()
         response = random.choice(lines)
-        await ctx.send("<:trishbigbrain:1267403453450158091>")
-        await ctx.send(response)
+        s = await bot.get_guild(serverId).fetch_sticker(thrubId)
+        await ctx.send(response, stickers=[s])
 
 @dc.cooldown(rate=1, per=60, type=dc.BucketType.user)
 @bot.command(name="tail")
