@@ -320,7 +320,7 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
             isUserMod = u.get_role(modRole)
             if u == ctx.author:
                 s = await bot.get_guild(serverId).fetch_sticker(eyerollId)
-                await u.reply("Don't do it dweeb. You have so much to live for.", stickers =[s])
+                await ctx.reply("Don't do it dweeb. You have so much to live for.", stickers =[s])
             elif isUserMod is None:
                 await u.timeout(timeoutDur)
                 await ctx.reply(f"{u} was timed out for {timeoutDur}")
