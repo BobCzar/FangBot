@@ -2,4 +2,5 @@
 *.csv
 *.txt
 *.json
+.venv
 !requirements.txt
