@@ -247,11 +247,10 @@ async def oracle(ctx):
         choice_index = random.randint(0, len(lines) - 1)
         response = lines[choice_index]
         s = await bot.get_guild(serverId).fetch_sticker(thrubId)
+        await ctx.send(response, stickers=[s])
         if choice_index == 7:
             # Play some gangsta rap.
-            await ctx.send(f'{response}\nhttps://www.youtube.com/embed/HS3Visim6PM', stickers=[s])
-        else:
-            await ctx.send(response, stickers=[s])
+            await ctx.send('https://www.youtube.com/embed/HS3Visim6PM')
 
 @dc.cooldown(rate=1, per=60, type=dc.BucketType.user)
 @bot.command(name="tail")
