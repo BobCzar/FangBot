@@ -231,6 +231,10 @@ async def snoot(ctx):
             await ctx.send(response)
             await ctx.send("<:glorysnoot:870704286366040064>")
 
+@bot.command(name="kiss", aliases=['smooch'])
+async def kiss(ctx):
+    await ctx.reply("<:anon:871914375047417866><:fangcute:871890064999870524>\n<:anon:871914375047417866><:fangkiss:871891009343205397>\n<:anonblush:871912888019845130><:fangblush:874452748857409566> ")
+
 @bot.command(name="nuggie")
 async def nuggie(ctx):
     with open('nuggie.txt', mode='r') as f:
