@@ -162,7 +162,7 @@ async def on_message(ctx):
             count_emojis(msgEmoji, ctx.guild)
         if ctx.stickers:
             count_stickers(ctx.stickers, ctx.guild)
-        if ctx.author == 'martingaming1013':
+        if ctx.author.name == 'martingaming1013':
             await ctx.add_reaction('🏳️‍🌈')
         await bot.process_commands(ctx)
 
