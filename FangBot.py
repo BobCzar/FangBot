@@ -162,7 +162,8 @@ async def on_message(ctx):
             count_emojis(msgEmoji, ctx.guild)
         if ctx.stickers:
             count_stickers(ctx.stickers, ctx.guild)
-
+        if ctx.author == 'martingaming1013':
+            await ctx.add_reaction('🏳️‍🌈')
         await bot.process_commands(ctx)
 
 def count_emojis(emojisList,gld):
@@ -348,12 +349,6 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
                 await ctx.reply("Go have your janny fight somewhere else.")
     else:
         return
-
-@bot.command()
-async def temp1(ctx):
-    #s = await bot.get_guild(serverId).fetch_sticker(eyerollId)
-    await ctx.reply(f"Server ID is {serverId}")
-    await ctx.reply(f"Sticker ID is {eyerollId}")
 
 @bot.command(name="winghug")
 async def winghug(ctx, *mentions:discord.Member):
