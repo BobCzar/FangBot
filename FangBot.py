@@ -237,6 +237,16 @@ async def kiss(ctx):
     await ctx.send("<:anon:871914375047417866><:fangkiss:871891009343205397>")
     await ctx.send("<:anonblush:871912888019845130><:fangblush:874452748857409566>")
 
+@bot.command(name="ban-id")
+@dc.has_permissions(ban_members=True)
+async def banbyid(ctx, *user_ids:int):
+    isMod = ctx.author.get_role(modRole)
+    if isMod is not None:
+        for user_id in user_ids:
+            user = discord.Object(user_id)
+            await ctx.guild.ban(user)
+            logger.info(f"{user} was banned by ID")
+
 @bot.command(name="nuggie")
 async def nuggie(ctx):
     with open('nuggie.txt', mode='r') as f:
