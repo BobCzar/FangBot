@@ -331,13 +331,13 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
     member = ctx.author
     isMod = member.get_role(modRole)
     if isMod is not None:
-        if timeframe == "days":
+        if timeframe in ["days","day"]:
             timeoutDur = timedelta(days=amount)
-        elif timeframe == "hours":
+        elif timeframe in ["hours","hour"]:
             timeoutDur = timedelta(hours=amount)
-        elif timeframe == "minutes":
+        elif timeframe in ["minutes","minute"]:
             timeoutDur = timedelta(minutes=amount)
-        elif timeframe == "seconds":
+        elif timeframe in ["seconds","second"]:
             timeoutDur = timedelta(seconds=amount)
         else:
             await ctx.reply("Invalid timeframe, dweeb. Use 'days', 'hours', 'minutes', or 'seconds'.")
