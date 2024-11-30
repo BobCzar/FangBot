@@ -359,12 +359,6 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
     else:
         return
 
-@bot.command()
-async def temp1(ctx):
-    #s = await bot.get_guild(serverId).fetch_sticker(eyerollId)
-    await ctx.reply(f"Server ID is {serverId}")
-    await ctx.reply(f"Sticker ID is {eyerollId}")
-
 @bot.command(name="winghug")
 async def winghug(ctx, *mentions:discord.Member):
     s = await bot.get_guild(serverId).fetch_sticker(winghugId)
@@ -384,7 +378,7 @@ async def winghug(ctx, *mentions:discord.Member):
     else:
         await ctx.reply(stickers=[s])
 
-@bot.command(name='stickers')
+@bot.command(name='liststickers')
 async def liststickers(ctx):
     if ctx.author.get_role(modRole) == None:
         return
@@ -396,6 +390,20 @@ async def liststickers(ctx):
             message = stickerinfo
         else:
             message += stickerinfo
+    await ctx.send(message)
+
+@bot.command(name='listemoji')
+async def listemoji(ctx):
+    if ctx.author.get_role(modRole) == None:
+        return
+    message = ''
+    for e in ctx.guild.emojis:
+        emojiinfo = f'{e.name}: {e.id}\n'
+        if len(message) + len(emojiinfo) > 2000:
+            await ctx.send(message)
+            message = emojiinfo
+        else:
+            message += emojiinfo
     await ctx.send(message)
 
 @bot.command(name='postrules')
