@@ -326,7 +326,7 @@ async def sneed(ctx):
     else:
         await ctx.send(f"{baseMsg} These pills won't help a janny. You're on your own, dweeb.")
 
-@bot.command(name="timeout")
+@bot.command(name="timeout", aliases=['offtopic'])
 async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
     member = ctx.author
     isMod = member.get_role(modRole)
