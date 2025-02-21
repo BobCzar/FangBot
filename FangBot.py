@@ -37,7 +37,7 @@ thrubId = int(os.getenv("THRUB_ID"))
 offtopicChannels = [int(channelId) for channelId in os.getenv("OFFTOPIC_CHANNELS").split(',')]
 booruBaseUrl = os.getenv("BOORU_BASE_URL")
 booruQueryParams = os.getenv("BOORU_QUERY_ENDPOINT")
-botOnBooru = bool(os.getenv("BOT_ON_BOORU_MACHINE"))
+botOnBooru = (os.getenv("BOT_ON_BOORU_MACHINE") == 'True')
 booruDataPath = os.getenv("BOORU_DATA_PATH")
 intents = discord.Intents(
     guilds=True,
