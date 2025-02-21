@@ -11,6 +11,8 @@ import random
 from datetime import timedelta
 from random import randrange
 from dotenv import load_dotenv
+import requests as r
+import io
 
 import discord
 from discord.ext import commands as dc
@@ -32,6 +34,11 @@ medsId = int(os.getenv("TAKEMEDS_ID"))
 eyerollId = int(os.getenv("EYEROLL_ID"))
 mascotRole = int(os.getenv("MASCOT_ROLE"))
 thrubId = int(os.getenv("THRUB_ID"))
+offtopicChannels = [int(channelId) for channelId in os.getenv("OFFTOPIC_CHANNELS").split(',')]
+booruBaseUrl = os.getenv("BOORU_BASE_URL")
+booruQueryParams = os.getenv("BOORU_QUERY_ENDPOINT")
+botOnBooru = bool(os.getenv("BOT_ON_BOORU_MACHINE"))
+booruDataPath = os.getenv("BOORU_DATA_PATH")
 intents = discord.Intents(
     guilds=True,
     members=True,
@@ -45,6 +52,7 @@ bot = dc.Bot(command_prefix="!", intents=intents, case_insensitive=True)
 logger = logging.getLogger('discord')
 emoteData = {}
 stickerData = {}
+booruApiHeaders = {'Accept': 'application/json'}
 
 # Remove the built in help command so that we can define a custom help command.
 bot.remove_command("help")
@@ -326,7 +334,7 @@ async def sneed(ctx):
     else:
         await ctx.send(f"{baseMsg} These pills won't help a janny. You're on your own, dweeb.")
 
-@bot.command(name="timeout", aliases=['offtopic'])
+@bot.command(name="timeout")
 async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
     member = ctx.author
     isMod = member.get_role(modRole)
@@ -444,6 +452,26 @@ async def postrules(ctx):
         else:
             post = await rulesChan.fetch_message(welcomePost)
             await post.edit(embed=embed)
+
+@bot.command(name='offtopic')
+async def offtopic(ctx):    
+    isJanny = ctx.author.get_role(modRole)
+    if isJanny != None and ctx.message.channel.id in offtopicChannels:
+        #Hardcoded the file size limit since Discord bots are limited to 8MB files
+        resp = r.get(booruBaseUrl + booruQueryParams + ' file-size:..8388607', headers=booruApiHeaders)
+        if resp.status_code == 200:
+            posts = resp.json()['results']
+            files = []
+            for p in posts:
+                imageUrl = f"{p['contentUrl']}"
+                imageName = imageUrl.split('/')[-1]
+                if botOnBooru:
+                    files.append(discord.File(booruDataPath+imageUrl, filename=imageName))
+                else:
+                    image = io.BytesIO(r.get(booruBaseUrl+imageUrl).content)
+                    image.name = imageName
+                    files.append(discord.File(image))
+            await ctx.reply(files=files)
 
 @bot.command()
 async def print_emoji_counts(ctx):
