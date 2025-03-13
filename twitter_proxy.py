@@ -12,6 +12,8 @@ from urllib.parse import urlparse, urljoin
 
 NITTER_INSTANCES = []
 
+logger = logging.getlogger("discord")
+
 def prepare_nitter_instances():
     """
     Prepares the NITTER_INSTANCES global array so that it can be used
