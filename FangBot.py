@@ -145,6 +145,9 @@ async def on_member_unban(guild, user):
 async def on_message(ctx):
     if ctx.author == bot.user:
         return
+    if ctx.author.name in ['martingaming1013','inhale___']:
+            await ctx.add_reaction('🏳️‍🌈')
+            await ctx.add_reaction('🏳️‍⚧️')
     emojiPattern = re.compile("<:[\w]+:[\d]+>")
     msgEmoji = re.findall(emojiPattern, ctx.content)
     if len(ctx.raw_mentions) > maxPing:
@@ -165,7 +168,7 @@ async def on_message(ctx):
         lowerMessage = ctx.content.lower()
         rolePing = re.search('<@&(\d+)>', lowerMessage)
         userPing = re.search('<@!?(\d+)>', lowerMessage)
-        if "@everyone" in lowerMessage or rolePing or userPing:
+        if ("@everyone" in lowerMessage) or rolePing or userPing:
             msgctx = await bot.get_context(ctx)
             await msgctx.invoke(bot.get_command("sneed"))
         elif (lowerMessage.startswith("i'm ") or lowerMessage.startswith("i am ") or lowerMessage.startswith("im ")) and len(lowerMessage) <= 32:
