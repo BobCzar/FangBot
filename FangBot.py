@@ -162,7 +162,7 @@ async def on_message(ctx):
             count_emojis(msgEmoji, ctx.guild)
         if ctx.stickers:
             count_stickers(ctx.stickers, ctx.guild)
-        if (ctx.content.lower().startswith("i'm ") or ctx.content.lower().startswith("i am ")) and len(ctx.content) <= 32:
+        if (ctx.content.lower().startswith("i'm ") or ctx.content.lower().startswith("i am ") or ctx.content.lower().startswith("im ")) and len(ctx.content) <= 32:
             isMascot = ctx.author.get_role(mascotRole)
             if isMascot != None:
                 with open('mascot.txt','r') as f:
@@ -172,23 +172,27 @@ async def on_message(ctx):
                         notName = ctx.content[4]
                     elif ctx.content.lower().startswith("i am "):
                         notName = ctx.content[5:]
+                    elif ctx.content.lower().startswith("im "):
+                        notName = ctx.content[3:]
                     notName = notName.rstrip().rstrip('.!?')
                     try:
                         await ctx.author.edit(nick=newName)
-                        await ctx.channel.send(f"You're not {notName}, you're {newName}!")
+                        await ctx.reply(f"You're not {notName}, you're {newName}!")
                     except discord.Forbidden:
-                        await ctx.channel.send(f"You're not {notName}, you're {newName}! You're lucky I don't have permission to change your nickname.")
+                        await ctx.reply(f"You're not {notName}, you're {newName}! You're lucky I don't have permission to change your nickname.")
             else:
                 if ctx.content.lower().startswith("i'm "):
                     newName = ctx.content[4:]
                 elif ctx.content.lower().startswith("i am "):
                     newName = ctx.content[5:]
+                elif ctx.content.lower().startswith("im "):
+                    newName = ctx.content[3:]
                 newName = newName.rstrip().rstrip('.!?')
                 try:
                     await ctx.author.edit(nick=newName)
-                    await ctx.channel.send(f"Hi {newName}, I'm Fang!")
+                    await ctx.reply(f"Hi {newName}, I'm Fang!")
                 except discord.Forbidden:
-                    await ctx.channel.send(f"Hi {newName}, I'm Fang! You're lucky I don't have permission to change your nickname.")
+                    await ctx.reply(f"Hi {newName}, I'm Fang! You're lucky I don't have permission to change your nickname.")
         await bot.process_commands(ctx)
 
 def count_emojis(emojisList,gld):
