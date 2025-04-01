@@ -168,7 +168,7 @@ async def on_message(ctx):
         lowerMessage = ctx.content.lower()
         rolePing = re.search('<@&(\d+)>', lowerMessage)
         userPing = re.search('<@!?(\d+)>', lowerMessage)
-        if ("@everyone" in lowerMessage) or rolePing or userPing:
+        if (lowerMessage.startswith("i'm ") or lowerMessage.startswith("i am ") or lowerMessage.startswith("im ")) and (("@everyone" in lowerMessage) or rolePing or userPing):
             msgctx = await bot.get_context(ctx)
             await msgctx.invoke(bot.get_command("sneed"))
         elif (lowerMessage.startswith("i'm ") or lowerMessage.startswith("i am ") or lowerMessage.startswith("im ")) and len(lowerMessage) <= 32:
