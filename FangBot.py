@@ -162,32 +162,38 @@ async def on_message(ctx):
             count_emojis(msgEmoji, ctx.guild)
         if ctx.stickers:
             count_stickers(ctx.stickers, ctx.guild)
-        if (ctx.content.lower().startswith("i'm ") or ctx.content.lower().startswith("i am ") or ctx.content.lower().startswith("im ")) and len(ctx.content) <= 32:
+        lowerMessage = ctx.content.lower()
+        rolePing = re.search('<@&(\d+)>', lowerMessage)
+        userPing = re.search('<@!?(\d+)>', lowerMessage)
+        if "@everyone" in lowerMessage or rolePing or userPing:
+            msgctx = await bot.get_context(ctx)
+            await msgctx.invoke(bot.get_command("sneed"))
+        elif (lowerMessage.startswith("i'm ") or lowerMessage.startswith("i am ") or lowerMessage.startswith("im ")) and len(lowerMessage) <= 32:
             isMascot = ctx.author.get_role(mascotRole)
             if isMascot != None:
                 with open('mascot.txt','r') as f:
                     lines = f.read().splitlines()
                     newName = random.choice(lines)
-                    if ctx.content.lower().startswith("i'm "):
+                    if lowerMessage.startswith("i'm "):
                         notName = ctx.content[4]
-                    elif ctx.content.lower().startswith("i am "):
+                    elif lowerMessage.startswith("i am "):
                         notName = ctx.content[5:]
-                    elif ctx.content.lower().startswith("im "):
+                    elif lowerMessage.startswith("i2m "):
                         notName = ctx.content[3:]
-                    notName = notName.rstrip().rstrip('.!?')
+                    notName = notName.rstrip().rstrip('.!?@').replace('@','')
                     try:
                         await ctx.author.edit(nick=newName)
                         await ctx.reply(f"You're not {notName}, you're {newName}!")
                     except discord.Forbidden:
                         await ctx.reply(f"You're not {notName}, you're {newName}! You're lucky I don't have permission to change your nickname.")
             else:
-                if ctx.content.lower().startswith("i'm "):
+                if lowerMessage.startswith("i'm "):
                     newName = ctx.content[4:]
-                elif ctx.content.lower().startswith("i am "):
+                elif lowerMessage.startswith("i am "):
                     newName = ctx.content[5:]
-                elif ctx.content.lower().startswith("im "):
+                elif lowerMessage.startswith("im "):
                     newName = ctx.content[3:]
-                newName = newName.rstrip().rstrip('.!?')
+                newName = newName.rstrip().rstrip('.!?').replace('@','')
                 try:
                     await ctx.author.edit(nick=newName)
                     await ctx.reply(f"Hi {newName}, I'm Fang!")
