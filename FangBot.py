@@ -252,7 +252,7 @@ async def banbyid(ctx, *user_ids:int):
     if isMod is not None:
         for user_id in user_ids:
             user = discord.Object(user_id)
-            await ctx.guild.ban(user)
+            await ctx.guild.ban(user, delete_message_days=0)
             logger.info(f"{user} was banned by ID")
 
 @bot.command(name="nuggie")
