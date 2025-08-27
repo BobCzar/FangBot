@@ -33,6 +33,7 @@ rulesPostId = int(os.getenv("RULES_POST_ID"))
 medsId = int(os.getenv("TAKEMEDS_ID"))
 eyerollId = int(os.getenv("EYEROLL_ID"))
 mascotRole = int(os.getenv("MASCOT_ROLE"))
+offtopicRole = int(os.getenv("OFFTOPIC_ROLE"))
 thrubId = int(os.getenv("THRUB_ID"))
 offtopicChannels = [int(channelId) for channelId in os.getenv("OFFTOPIC_CHANNELS").split(',')]
 booruBaseUrl = os.getenv("BOORU_BASE_URL")
@@ -293,7 +294,7 @@ async def tail(ctx):
             if winner:
                 logger.info(f"{ctx.author.name} won the tail roulette.")
 
-@bot.command(name="sneed", aliases=['faggot'])
+@bot.command(name="sneed", aliases=['faggot','wingrape','nigger','naomi','rape'])
 async def sneed(ctx):
     userName = ctx.author.nick or ctx.author.display_name
     member = ctx.author
@@ -456,7 +457,8 @@ async def postrules(ctx):
 @bot.command(name='offtopic')
 async def offtopic(ctx):    
     isJanny = ctx.author.get_role(modRole)
-    if isJanny != None and ctx.message.channel.id in offtopicChannels:
+    isOfftopicEnforcer = ctx.auther.get_role(offtopicRole)
+    if (isJanny != None or isOfftopicEnforcer !=None) and ctx.message.channel.id in offtopicChannels:
         #Hardcoded the file size limit since Discord bots are limited to 8MB files
         resp = r.get(booruBaseUrl + booruQueryParams + ' file-size:..8388607', headers=booruApiHeaders)
         if resp.status_code == 200:
