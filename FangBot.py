@@ -457,7 +457,7 @@ async def postrules(ctx):
 @bot.command(name='offtopic')
 async def offtopic(ctx):    
     isJanny = ctx.author.get_role(modRole)
-    isOfftopicEnforcer = ctx.auther.get_role(offtopicRole)
+    isOfftopicEnforcer = ctx.author.get_role(offtopicRole)
     if (isJanny != None or isOfftopicEnforcer !=None) and ctx.message.channel.id in offtopicChannels:
         #Hardcoded the file size limit since Discord bots are limited to 8MB files
         resp = r.get(booruBaseUrl + booruQueryParams + ' file-size:..8388607', headers=booruApiHeaders)
