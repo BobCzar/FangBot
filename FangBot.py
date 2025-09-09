@@ -368,6 +368,15 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
     else:
         return
 
+
+@bot.command(name="faggot-fucking-dies")
+async def jjj(ctx, *users: discord.Member):
+    await timeout(ctx, "days", 28, *users)
+
+@bot.command(name="1984")
+async def timeout_1984(ctx, *users: discord.Member):
+    await timeout(ctx, "seconds", 1984, *users)
+
 @bot.command(name="winghug")
 async def winghug(ctx, *mentions:discord.Member):
     s = await bot.get_guild(serverId).fetch_sticker(winghugId)
@@ -530,7 +539,6 @@ async def get_names(gld, ids, type):
             else:
                 names[id] = 'DELETED STICKER'
     return names
-
 
 @bot.command()
 async def info(ctx):
