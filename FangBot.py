@@ -424,6 +424,41 @@ async def listemoji(ctx):
             message += emojiinfo
     await ctx.send(message)
 
+@bot.command(name='dump-emoji')
+async def dumpemoji(ctx):
+    if ctx.author.get_role(modRole) == None:
+        return
+    baseUrl = "https://cdn.discordapp.com/emojis/"
+    for e in ctx.guild.emojis:
+        emojiName = e.name
+        emojiUrl = baseUrl + str(e.id) + ".webp"
+        if e.animated:
+            emojiUrl += "?animated=true"
+        resp = r.get(emojiUrl)
+        emojiData = resp.content
+        filename = f"{emojiName}.webp"
+        with open(f"dumped_emoji/{filename}", "wb") as f: 
+            f.write(emojiData)
+        print(f"Saved {filename}")
+    await ctx.reply("Complete")
+
+@bot.command(name='dump-stickers')
+async def dumpemoji(ctx):
+    if ctx.author.get_role(modRole) == None:
+        return
+    baseUrl = "https://cdn.discordapp.com/stickers/"
+    for s in ctx.guild.stickers:
+        stickerName = s.name
+        stickerType = s.format.file_extension
+        stickerUrl = s.url
+        resp = r.get(stickerUrl)
+        stickerData = resp.content
+        filename = f"{stickerName}.{stickerType}"
+        with open(f"dumped_stickers/{filename}", "wb") as f: 
+            f.write(stickerData)
+        print(f"Saved {filename}")        
+    await ctx.reply("Complete")
+
 @bot.command(name='postrules')
 async def postrules(ctx):
     global welcomePost
