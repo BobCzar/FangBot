@@ -17,6 +17,8 @@ import io
 import discord
 from discord.ext import commands as dc
 
+from .twitter_proxy import prepare_nitter_instances, convert_twitter_link
+
 load_dotenv()
 
 # Perform some configuration for our application.
@@ -96,6 +98,8 @@ async def on_ready():
         with open("stickers.json",'r') as file:
             stickerData = json.load(file)
 
+    prepare_nitter_instances()
+
     logger.info(f"{bot.user.name} is ready in server.")
 
 @bot.event
@@ -156,6 +160,10 @@ async def on_message(ctx):
         return
     emojiPattern = re.compile("<:[\w]+:[\d]+>")
     msgEmoji = re.findall(emojiPattern, ctx.content)
+
+    twitter_link_pattern = re.compile("https:\/\/twitter.com.+")
+    twitter_link = re.findall(twitter_link_pattern, ctx.content)
+
     if len(ctx.raw_mentions) > maxPing:
         author = ctx.author
         await ctx.delete()
@@ -171,6 +179,9 @@ async def on_message(ctx):
             count_emojis(msgEmoji, ctx.guild)
         if ctx.stickers:
             count_stickers(ctx.stickers, ctx.guild)
+        if twitter_link:
+            fixed_link = convert_twitter_link(ctx.content)
+            await ctx.channel.send(fixed_link)
 
         await bot.process_commands(ctx)
 
@@ -499,7 +510,7 @@ async def postrules(ctx):
             await post.edit(embed=embed)
 
 @bot.command(name='offtopic')
-async def offtopic(ctx):    
+async def offtopic(ctx):
     isJanny = ctx.author.get_role(modRole)
     isOfftopicEnforcer = ctx.author.get_role(offtopicRole)
     if (isJanny != None or isOfftopicEnforcer !=None) and ctx.message.channel.id in offtopicChannels:
