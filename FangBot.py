@@ -33,6 +33,8 @@ rulesPostId = int(os.getenv("RULES_POST_ID"))
 medsId = int(os.getenv("TAKEMEDS_ID"))
 eyerollId = int(os.getenv("EYEROLL_ID"))
 mascotRole = int(os.getenv("MASCOT_ROLE"))
+shitRole = int(os.getenv("SHIT_ROLE"))
+goodRole = int(os.getenv("GOOD_ROLE"))
 offtopicRole = int(os.getenv("OFFTOPIC_ROLE"))
 thrubId = int(os.getenv("THRUB_ID"))
 offtopicChannels = [int(channelId) for channelId in os.getenv("OFFTOPIC_CHANNELS").split(',')]
@@ -171,7 +173,8 @@ async def on_message(ctx):
             count_emojis(msgEmoji, ctx.guild)
         if ctx.stickers:
             count_stickers(ctx.stickers, ctx.guild)
-
+#        if ctx.author == 'misty_breeze':
+#            await ctx.add_reaction('🥛')
         await bot.process_commands(ctx)
 
 def count_emojis(emojisList,gld):
@@ -256,7 +259,7 @@ async def banbyid(ctx, *user_ids:int):
             await ctx.guild.ban(user, delete_message_days=0)
             logger.info(f"{user} was banned by ID")
 
-@bot.command(name="nuggie")
+@bot.command(name="nuggie", aliases=['nug','nugget'])
 async def nuggie(ctx):
     with open('nuggie.txt', mode='r') as f:
             lines = f.read().splitlines()
@@ -294,7 +297,7 @@ async def tail(ctx):
             if winner:
                 logger.info(f"{ctx.author.name} won the tail roulette.")
 
-@bot.command(name="sneed", aliases=['faggot','wingrape','nigger','naomi','rape'])
+@bot.command(name="sneed", aliases=['faggot','wingrape','nigger','naomi','rape','smoosh'])
 async def sneed(ctx):
     userName = ctx.author.nick or ctx.author.display_name
     member = ctx.author
@@ -373,9 +376,28 @@ async def timeout(ctx, timeframe: str, amount: int, *users: discord.Member):
 async def jjj(ctx, *users: discord.Member):
     await timeout(ctx, "days", 28, *users)
 
-@bot.command(name="1984")
+@bot.command(name="1984", aliases=['esl'])
 async def timeout_1984(ctx, *users: discord.Member):
     await timeout(ctx, "seconds", 1984, *users)
+
+@bot.command(name="flush")
+async def flush(ctx, *users: discord.Member):
+    member = ctx.author
+    isMod = member.get_role(modRole)
+    isUserGood = member.get_role(goodRole)
+    if isMod is not None or isUserGood is not None:
+        for u in users:
+            isUserShit = u.get_role(shitRole)
+            isUserMod = u.get_role(modRole)
+            if isUserMod is None and isUserShit is not None:
+                await u.timeout(timedelta(minutes=30))
+                await ctx.reply(f"{u} was timed out for 30 minutes.")
+            elif isUserMod is not None and isUserShit is not None:
+                await ctx.reply(f"You can't flush a jannie, even if they have shit opinions.")
+            else:
+                await ctx.reply(f"You can only flush the shit opinions havers.")
+    else:
+        return
 
 @bot.command(name="winghug")
 async def winghug(ctx, *mentions:discord.Member):
