@@ -277,7 +277,8 @@ async def oracle(ctx):
         s = await bot.get_guild(serverId).fetch_sticker(thrubId)
         if choice_index == 7:
             # Play some gangsta rap.
-            await ctx.send(f'[{response}](https://www.youtube.com/embed/HS3Visim6PM)', stickers=[s])
+            with open('assets/gangsta_rap.mp4', mode='rb') as gangsta_rap_file:
+                await ctx.send(content=response, file=gangsta_rap_video, stickers=[s])
         else:
             await ctx.send(response, stickers=[s])
 
